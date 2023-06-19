@@ -1,5 +1,11 @@
 package org.campusmolndal;
 
+import org.campusmolndal.mongodb.MongoTodoRepository;
+import org.campusmolndal.todo.Todo;
+import org.campusmolndal.todo.TodoDao;
+
+import java.util.List;
+
 /*
  * ----------------------------------------------------------------------------
  * Copyright (c) 2019-2023 Marcus Medina, Campus Mölndal
@@ -11,16 +17,14 @@ package org.campusmolndal;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
-
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
-
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        Todo todo = new Todo(new MongoTodoRepository());
+        TodoDao dao1 = new TodoDao();
+        dao1.setText("Gör grejer");
+        dao1.setUser("64908a012db5a3ef8805f88d");
+        dao1.setDone(false);
+        todo.create(dao1);
+        for(TodoDao dao : todo.list()) {
+            System.out.println(dao.getText());
         }
     }
 }
