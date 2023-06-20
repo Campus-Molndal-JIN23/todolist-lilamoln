@@ -33,12 +33,6 @@ public class AppController {
     public User create(User user) {
         return getUser(userService.create(user).getId());
     }
-    public Todo changeStatus(Todo todo, boolean status) {
-        return todoService.changeStatus(todo, status);
-    }
-    public Todo changeText(Todo todo, String text) {
-        return todoService.changeText(todo, text);
-    }
     public Todo delete(Todo todo) {
         return todoService.delete(todo);
     }
@@ -52,9 +46,6 @@ public class AppController {
             users.add(getUser(user.getId()));
         }
         return users;
-    }
-    public List<Todo> listTodos() {
-        return todoService.listTodos();
     }
     public List<Todo> listTodos(User user) {
         return todoService.getByUserId(user.getId());

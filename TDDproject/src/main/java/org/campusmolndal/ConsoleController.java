@@ -102,7 +102,7 @@ public class ConsoleController {
             }
             case 3 -> {
                 if(appController.delete(todo) == null) {
-                    System.out.println("Todo not deleted, try again");
+                    System.err.println("Todo not deleted, try again");
                 }
                 else {
                     user.getTodos().remove(todo);

@@ -9,18 +9,12 @@ public class TodoService {
     public TodoService(TodoDao todoDao) {
         this.todoDao = todoDao;
     }
-    public Todo changeStatus(Todo todo, boolean status) {
-        todo.setDone(status);
-        return update(todo);
-    }
-    public Todo changeText(Todo todo, String text) {
-        todo.setText(text);
-        return update(todo);
-    }
     public Todo delete(Todo todo) {
+        if(todo == null) return null;
         return todoDao.delete(todo.getId());
     }
     public Todo create(Todo todo) {
+        if(todo == null) return null;
         return todoDao.create(todo);
     }
     public List<Todo> getByUserId(String id) {
@@ -32,6 +26,7 @@ public class TodoService {
     }
 
     public Todo update(Todo todo) {
+        if(todo == null) return null;
         return todoDao.update(todo.getId(), todo);
     }
 }
