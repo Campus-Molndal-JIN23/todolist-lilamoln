@@ -6,12 +6,13 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.types.ObjectId;
-import org.campusmolndal.interfaces.Repository;
+import org.campusmolndal.interfaces.Dao;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-abstract class MongoRepository<T> implements Repository<T> {
+public class MongoDao<T> implements Dao<T> {
     private MongoCollection<T> collection;
-    MongoRepository(String collectionName, Class<T> tClass) {
+    MongoDao(String collectionName, Class<T> tClass) {
         MongoDatabase db;
         try {
             db = getDb(getConnectionString(), getCluster());
@@ -29,18 +30,47 @@ abstract class MongoRepository<T> implements Repository<T> {
             db = getDb("mongodb://localhost:27017", "Cluster0");
         }
         this.setCollection(db.getCollection(collectionName, tClass));
+        if (db == null || getCollection() == null) {
+            throw new RuntimeException("No connection to MongoDB atlas or localhost");
+        }
     }
-    public void create(T t) {
-        getCollection().insertOne(t);
+    public T create(T t) {
+        try {
+            BsonValue inserted = getCollection().insertOne(t).getInsertedId();
+            return read(inserted.asObjectId().getValue().toString());
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
     public T read(String id) {
-        return getCollection().find(new Document("_id",new ObjectId(id))).first();
+        try {
+            return getCollection().find(new Document("_id",new ObjectId(id))).first();
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
-    public void update(T t) {
-        getCollection().findOneAndReplace(new Document("_id",t),t);
+    @Override
+    public T update(String id, T t) {
+        try {
+            return getCollection().findOneAndReplace(new Document("_id",new ObjectId(id)),t);
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
-    public void delete(T t) {
-        getCollection().findOneAndDelete(new Document("_id",t));
+    @Override
+    public T delete(String id) {
+        try{
+            return getCollection().findOneAndDelete(new Document("_id",new ObjectId(id)));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
     public List<T> list() {
         List<T> ts = new ArrayList<>();

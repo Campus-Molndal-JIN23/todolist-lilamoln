@@ -1,27 +1,54 @@
 package org.campusmolndal.todo;
 
-import org.campusmolndal.interfaces.Repository;
-
-import java.util.List;
+import org.bson.BsonType;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.codecs.pojo.annotations.BsonRepresentation;
 
 public class Todo {
-    Repository<TodoDao> repository;
-    public Todo(Repository<TodoDao> repository) {
-        this.repository = repository;
+    @BsonId()
+    @BsonRepresentation(BsonType.OBJECT_ID)
+    @BsonProperty("_id")
+    String id;
+    @BsonProperty("text")
+    String text;
+    @BsonProperty("done")
+    boolean done;
+
+    public boolean isDone() {
+        return this.done;
     }
-    public void create(TodoDao todoDao) {
-        repository.create(todoDao);
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
-    public TodoDao read(String id) {
-        return repository.read(id);
+
+    @BsonId()
+    @BsonRepresentation(BsonType.OBJECT_ID)
+    @BsonProperty("assigned_to")
+    String user;
+
+    public String getId() {
+        return this.id;
     }
-    public List<TodoDao> list() {
-        return repository.list();
+
+    public void setId(String id) {
+        this.id = id;
     }
-    public void update(TodoDao todoDao) {
-        repository.update(todoDao);
+
+    public String getText() {
+        return this.text;
     }
-    public void delete(TodoDao todoDao) {
-        repository.delete(todoDao);
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getUser() {
+        return this.user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

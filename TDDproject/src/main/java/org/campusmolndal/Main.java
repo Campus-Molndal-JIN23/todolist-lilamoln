@@ -1,31 +1,7 @@
 package org.campusmolndal;
 
-import org.campusmolndal.mongodb.MongoTodoRepository;
-import org.campusmolndal.todo.Todo;
-import org.campusmolndal.todo.TodoDao;
-
-import java.util.List;
-
-/*
- * ----------------------------------------------------------------------------
- * Copyright (c) 2019-2023 Marcus Medina, Campus Mölndal
- * Licensed under the Apache License, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
- * ----------------------------------------------------------------------------
- */
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        Todo todo = new Todo(new MongoTodoRepository());
-        TodoDao dao1 = new TodoDao();
-        dao1.setText("Gör grejer");
-        dao1.setUser("64908a012db5a3ef8805f88d");
-        dao1.setDone(false);
-        todo.create(dao1);
-        for(TodoDao dao : todo.list()) {
-            System.out.println(dao.getText());
-        }
+        new ConsoleController();
     }
 }
-
