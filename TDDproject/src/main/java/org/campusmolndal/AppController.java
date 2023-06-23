@@ -7,7 +7,6 @@ import org.campusmolndal.todo.TodoService;
 import org.campusmolndal.user.User;
 import org.campusmolndal.user.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppController {
@@ -43,8 +42,7 @@ public class AppController {
     public List<User> listUsers() {
         return userService.listUsers();
     }
-    public List<Todo> listTodos(User user) {
-        System.out.println(user.getId());
+    public List<Todo> listUserTodo(User user) {
         return todoService.getByUserId(user.getId());
     }
 

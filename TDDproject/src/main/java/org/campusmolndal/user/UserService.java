@@ -16,6 +16,12 @@ public class UserService {
         return userDao.create(user);
     }
     public User changeName(User user, String name) {
+        if(user == null) {
+            return null;
+        }
+        if(name == null) {
+            return user;
+        }
         user.setName(name);
         return update(user);
     }

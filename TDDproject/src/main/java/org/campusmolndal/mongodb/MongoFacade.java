@@ -2,6 +2,7 @@ package org.campusmolndal.mongodb;
 
 import com.mongodb.*;
 import com.mongodb.client.*;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -40,7 +41,8 @@ public class MongoFacade {
     }
     public Document update(Document document) {
         try {
-            collection.replaceOne(new Document("_id",document.get("_id")),document);
+            long changed = collection.replaceOne(new Document("_id",document.get("_id")),document).getModifiedCount();
+            if(changed == 0) return null;
             return document;
         } catch (MongoException e) {
             System.err.println(e.getMessage());
@@ -49,8 +51,9 @@ public class MongoFacade {
     }
     public Document delete(Document document) {
         try {
-            collection.deleteOne(new Document("_id",document.get("_id")));
-            return document;
+            if(collection.deleteOne(new Document("_id",document.get("_id"))).wasAcknowledged())
+                return document;
+            return null;
         } catch (MongoException e) {
             System.err.println(e.getMessage());
             return null;
