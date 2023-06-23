@@ -33,7 +33,7 @@ class TodoServiceTest {
     @Test
     void delete() {
         //arrange
-        when(todoDao.delete(sampleTodo.getId())).thenReturn(sampleTodo);
+        when(todoDao.delete(sampleTodo)).thenReturn(sampleTodo);
         Todo expected = sampleTodo;
 
         //act
@@ -47,7 +47,7 @@ class TodoServiceTest {
         //arrange
         Todo expected = null;
         sampleTodo.setId("Not a valid ObjectId");
-        when(todoDao.delete(sampleTodo.getId())).thenReturn(null);
+        when(todoDao.delete(sampleTodo)).thenReturn(null);
 
         //act
         Todo actual = sut.delete(sampleTodo);
@@ -153,7 +153,7 @@ class TodoServiceTest {
     @Test
     void update() {
         //arrange
-        when(todoDao.update(sampleTodo.getId(), sampleTodo)).thenReturn(sampleTodo);
+        when(todoDao.update(sampleTodo)).thenReturn(sampleTodo);
         Todo expected = sampleTodo;
         //act
         Todo actual = sut.update(sampleTodo);
@@ -164,7 +164,7 @@ class TodoServiceTest {
     void updateNull() {
         //arrange
         Todo expected = null;
-        when(todoDao.update(null, null)).thenReturn(null);
+        when(todoDao.update(null)).thenReturn(null);
         //act
         Todo actual = sut.update(null);
         //assert
@@ -174,7 +174,7 @@ class TodoServiceTest {
     void updateInvalidObjectId() {
         //arrange
         sampleTodo.setId("Not a valid ObjectId");
-        when(todoDao.update(sampleTodo.getId(), sampleTodo)).thenReturn(null);
+        when(todoDao.update(sampleTodo)).thenReturn(null);
         //act
         Todo actual = sut.update(sampleTodo);
         //assert

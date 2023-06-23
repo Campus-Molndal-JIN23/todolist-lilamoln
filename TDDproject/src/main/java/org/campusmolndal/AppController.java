@@ -31,7 +31,7 @@ public class AppController {
         return userService.deleteUser(user);
     }
     public User create(User user) {
-        return getUser(userService.create(user).getId());
+        return userService.create(user);
     }
     public Todo delete(Todo todo) {
         return todoService.delete(todo);
@@ -41,13 +41,10 @@ public class AppController {
     }
 
     public List<User> listUsers() {
-        List<User> users = new ArrayList<>();
-        for(User user : userService.listUsers()) {
-            users.add(getUser(user.getId()));
-        }
-        return users;
+        return userService.listUsers();
     }
     public List<Todo> listTodos(User user) {
+        System.out.println(user.getId());
         return todoService.getByUserId(user.getId());
     }
 

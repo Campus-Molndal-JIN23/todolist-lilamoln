@@ -1,7 +1,7 @@
 package org.campusmolndal;
 
-import org.campusmolndal.mongodb.MongoTodoDao;
-import org.campusmolndal.mongodb.MongoUserDao;
+import org.campusmolndal.newmongo.NewMongoTodoDao;
+import org.campusmolndal.newmongo.NewMongoUserDao;
 import org.campusmolndal.todo.Todo;
 import org.campusmolndal.user.User;
 
@@ -9,12 +9,11 @@ import java.rmi.ServerError;
 import java.util.List;
 
 public class ConsoleController {
-    private final AppController appController;
+    private final AppController appController = new AppController(new NewMongoUserDao(), new NewMongoTodoDao());
     private User user;
     private boolean running = true;
 
     public ConsoleController() {
-        this.appController = setAppController();
         while(this.user == null) this.user = setUser();
         while (running) {
             mainMenu();
@@ -32,7 +31,6 @@ public class ConsoleController {
         System.out.println("6. Exit");
         switch (InputGetter.getIntInput("Enter choice", 1, 8)) {
             case 1 -> {
-                if(user.getTodos() == null) user.setTodos(appController.listTodos(user));
                 listTodos(user.getTodos());
             }
             case 2 -> {
@@ -151,7 +149,7 @@ public class ConsoleController {
         if (choice == users.size() + 1) {
             return null;
         }
-        return users.get(choice - 1);
+        return appController.getUser(users.get(choice - 1 ).getId());
     }
 
     private AppController setAppController() {
@@ -160,7 +158,7 @@ public class ConsoleController {
         System.out.println("2. NoSQL");
         switch (InputGetter.getIntInput("Enter choice", 1, 2)) {
             case 1 -> {
-                return new AppController(new MongoUserDao(), new MongoTodoDao());
+                return new AppController(new NewMongoUserDao(), new NewMongoTodoDao());
             }
             case 2 -> {
                 return null;

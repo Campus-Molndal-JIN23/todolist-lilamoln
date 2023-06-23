@@ -11,7 +11,7 @@ public class TodoService {
     }
     public Todo delete(Todo todo) {
         if(todo == null) return null;
-        return todoDao.delete(todo.getId());
+        return todoDao.delete(todo);
     }
     public Todo create(Todo todo) {
         if(todo == null) return null;
@@ -27,6 +27,6 @@ public class TodoService {
 
     public Todo update(Todo todo) {
         if(todo == null) return null;
-        return todoDao.update(todo.getId(), todo);
+        return todoDao.update(todo);
     }
 }

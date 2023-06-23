@@ -20,12 +20,12 @@ public class UserService {
         return update(user);
     }
     public User deleteUser(User user) {
-        return userDao.delete(user.getId());
+        return userDao.delete(user);
     }
     public List<User> listUsers() {
         return userDao.list();
     }
     private User update(User user) {
-        return userDao.update(user.getId(), user);
+        return userDao.update(user);
     }
 }
