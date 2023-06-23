@@ -1,4 +1,4 @@
-package org.campusmolndal.newmongo;
+package org.campusmolndal.mongodb;
 
 import com.mongodb.*;
 import com.mongodb.client.*;
@@ -12,7 +12,6 @@ import java.util.List;
 public class MongoFacade {
     MongoCollection<Document> collection;
     public MongoFacade(String collection) {
-        MongoDatabase database;
         MongoSettings mongoSettings = new MongoSettings();
         ServerApi serverApi = ServerApi.builder()
                 .version(ServerApiVersion.V1)
@@ -22,8 +21,8 @@ public class MongoFacade {
                 .serverApi(serverApi)
                 .build();
         MongoClient mongoClient = MongoClients.create(settings);
-            database = mongoClient.getDatabase(mongoSettings.getCluster());
-            database.runCommand(new Document("ping",1));
+        MongoDatabase database = mongoClient.getDatabase(mongoSettings.getCluster());
+        database.runCommand(new Document("ping",1));
         this.collection = database.getCollection(collection);
     }
     public Document get(String id) {

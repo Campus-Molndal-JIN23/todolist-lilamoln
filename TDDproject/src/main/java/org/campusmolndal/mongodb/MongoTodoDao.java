@@ -1,4 +1,4 @@
-package org.campusmolndal.newmongo;
+package org.campusmolndal.mongodb;
 
 import org.campusmolndal.interfaces.TodoDao;
 import org.campusmolndal.todo.Todo;
@@ -7,9 +7,9 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewMongoTodoDao implements TodoDao {
+public class MongoTodoDao implements TodoDao {
     private final MongoFacade mongoFacade = new MongoFacade("todos");
-    public NewMongoTodoDao() {
+    public MongoTodoDao() {
 
     }
     @Override

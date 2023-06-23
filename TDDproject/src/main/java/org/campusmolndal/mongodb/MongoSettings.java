@@ -1,4 +1,4 @@
-package org.campusmolndal.newmongo;
+package org.campusmolndal.mongodb;
 
 import java.io.FileReader;
 import java.util.Properties;
@@ -13,7 +13,7 @@ public class MongoSettings {
         }
         this.cluster = getSetting("cluster");
         if (this.cluster == null) {
-            this.cluster = "Cluster0";
+            this.cluster = "ClusterKoffaTodo";
         }
     }
     private String getSetting(String key) {

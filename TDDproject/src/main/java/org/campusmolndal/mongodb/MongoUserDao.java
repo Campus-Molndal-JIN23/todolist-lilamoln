@@ -1,4 +1,4 @@
-package org.campusmolndal.newmongo;
+package org.campusmolndal.mongodb;
 
 import org.campusmolndal.interfaces.UserDao;
 import org.campusmolndal.user.User;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
 
-public class NewMongoUserDao implements UserDao {
+public class MongoUserDao implements UserDao {
     private final MongoFacade mongoFacade = new MongoFacade("users");
     @Override
     public User create(User user) {

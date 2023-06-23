@@ -1,15 +1,14 @@
 package org.campusmolndal;
 
-import org.campusmolndal.newmongo.NewMongoTodoDao;
-import org.campusmolndal.newmongo.NewMongoUserDao;
+import org.campusmolndal.mongodb.MongoTodoDao;
+import org.campusmolndal.mongodb.MongoUserDao;
 import org.campusmolndal.todo.Todo;
 import org.campusmolndal.user.User;
 
-import java.rmi.ServerError;
 import java.util.List;
 
 public class ConsoleController {
-    private final AppController appController = new AppController(new NewMongoUserDao(), new NewMongoTodoDao());
+    private final AppController appController = new AppController(new MongoUserDao(), new MongoTodoDao());
     private User user;
     private boolean running = true;
 
@@ -158,7 +157,7 @@ public class ConsoleController {
         System.out.println("2. NoSQL");
         switch (InputGetter.getIntInput("Enter choice", 1, 2)) {
             case 1 -> {
-                return new AppController(new NewMongoUserDao(), new NewMongoTodoDao());
+                return new AppController(new MongoUserDao(), new MongoTodoDao());
             }
             case 2 -> {
                 return null;
