@@ -1,17 +1,21 @@
 package org.campusmolndal.user;
 
 import org.bson.BsonType;
+import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.codecs.pojo.annotations.BsonRepresentation;
+import org.bson.types.ObjectId;
 import org.campusmolndal.todo.Todo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
     @BsonId
     @BsonRepresentation(BsonType.OBJECT_ID)
+    @BsonProperty("_id")
     String id;
     @BsonProperty("name")
     String name;
@@ -37,10 +41,27 @@ public class User {
     }
 
     public List<Todo> getTodos() {
+        if(this.todos == null) this.todos = new ArrayList<>();
         return this.todos;
     }
 
     public void setTodos(List<Todo> todos) {
         this.todos = todos;
+    }
+    public Document toDocument() {
+        Document document = new Document();
+        try {
+            document.append("_id", new ObjectId(this.id));
+        } catch (Exception e) {
+            System.err.println("Error parsing id: " + e.getMessage());
+        }
+        document.append("name", this.name);
+        return document;
+    }
+    public static User fromDocument(Document document) {
+        User user = new User();
+        user.setId(document.getObjectId("_id").toString());
+        user.setName(document.getString("name"));
+        return user;
     }
 }

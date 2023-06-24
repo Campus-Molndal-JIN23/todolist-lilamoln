@@ -1,11 +1,14 @@
 package org.campusmolndal;
 
+import org.campusmolndal.mongodb.MongoFacade;
 import org.campusmolndal.mongodb.MongoTodoDao;
 import org.campusmolndal.mongodb.MongoUserDao;
+import org.campusmolndal.sqlite.SQLiteHandler;
+import org.campusmolndal.sqlite.SQLiteTodoDao;
+import org.campusmolndal.sqlite.SQLiteUserDao;
 import org.campusmolndal.todo.Todo;
 import org.campusmolndal.user.User;
 
-import java.rmi.ServerError;
 import java.util.List;
 
 public class ConsoleController {
@@ -31,13 +34,8 @@ public class ConsoleController {
         System.out.println("5. Change user");
         System.out.println("6. Exit");
         switch (InputGetter.getIntInput("Enter choice", 1, 8)) {
-            case 1 -> {
-                if(user.getTodos() == null) user.setTodos(appController.listTodos(user));
-                listTodos(user.getTodos());
-            }
-            case 2 -> {
-                createTodo();
-            }
+            case 1 -> listTodos(user.getTodos());
+            case 2 -> createTodo();
             case 3 -> {
                 User newName = appController.changeName(user, InputGetter.getStringInput("Enter new name"));
                 if(newName == null) {
@@ -54,12 +52,8 @@ public class ConsoleController {
                 this.user = null;
                 while(this.user == null) this.user = setUser();
             }
-            case 5 -> {
-                this.user=setUser();
-            }
-            case 6 -> {
-                running = false;
-            }
+            case 5 -> this.user=setUser();
+            case 6 -> running = false;
         }
     }
 
@@ -109,9 +103,7 @@ public class ConsoleController {
                     System.out.println("Todo deleted");
                 }
             }
-            case 4 -> {
-                return;
-            }
+            case 4 -> {}
         }
     }
 
@@ -151,7 +143,7 @@ public class ConsoleController {
         if (choice == users.size() + 1) {
             return null;
         }
-        return users.get(choice - 1);
+        return appController.getUser(users.get(choice - 1 ).getId());
     }
 
     private AppController setAppController() {
@@ -160,10 +152,16 @@ public class ConsoleController {
         System.out.println("2. NoSQL");
         switch (InputGetter.getIntInput("Enter choice", 1, 2)) {
             case 1 -> {
-                return new AppController(new MongoUserDao(), new MongoTodoDao());
+                return new AppController(
+                        new MongoUserDao(new MongoFacade("users")),
+                        new MongoTodoDao(new MongoFacade("todos"))
+                );
             }
             case 2 -> {
-                return null;
+                return new AppController(
+                        new SQLiteUserDao(new SQLiteHandler()),
+                        new SQLiteTodoDao(new SQLiteHandler())
+                );
             }
             default -> {
                 return null;
