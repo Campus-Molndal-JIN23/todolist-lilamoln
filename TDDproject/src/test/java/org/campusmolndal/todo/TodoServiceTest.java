@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,7 +45,6 @@ class TodoServiceTest {
     @Test
     void deleteNotValidObjectId() {
         //arrange
-        Todo expected = null;
         sampleTodo.setId("Not a valid ObjectId");
         when(todoDao.delete(sampleTodo)).thenReturn(null);
 
@@ -58,7 +57,6 @@ class TodoServiceTest {
     @Test
     void deleteNull() {
         //arrange
-        Todo expected = null;
         when(todoDao.delete(null)).thenReturn(null);
 
         //act
@@ -83,7 +81,6 @@ class TodoServiceTest {
     @Test
     void createNull() {
         //arrange
-        Todo expected = null;
         when(todoDao.create(null)).thenReturn(null);
 
         //act
@@ -107,7 +104,7 @@ class TodoServiceTest {
     @Test
     void getByUserId() {
         //arrange
-        List<Todo> expected = Arrays.asList(sampleTodo);
+        List<Todo> expected = Collections.singletonList(sampleTodo);
         when(todoDao.getByUserId(sampleTodo.getUser())).thenReturn(expected);
 
         //act
@@ -142,7 +139,7 @@ class TodoServiceTest {
     @Test
     void listTodos() {
         //arrange
-        List<Todo> expected = Arrays.asList(sampleTodo);
+        List<Todo> expected = Collections.singletonList(sampleTodo);
         when(todoDao.list()).thenReturn(expected);
         //act
         List<Todo> actual = sut.listTodos();
@@ -163,7 +160,6 @@ class TodoServiceTest {
     @Test
     void updateNull() {
         //arrange
-        Todo expected = null;
         when(todoDao.update(null)).thenReturn(null);
         //act
         Todo actual = sut.update(null);

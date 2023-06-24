@@ -6,25 +6,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class MongoUserDaoTest {
-    MongoUserDao sut;
-    User sampleUser;
     @Mock
     MongoFacade mongoFacade;
+    MongoUserDao sut;
+    User sampleUser;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        sut = new MongoUserDao();
+        sut = new MongoUserDao(mongoFacade);
         sampleUser = new User();
         sampleUser.setName("Test");
         sampleUser.setId("6491af8fd1fb19ed7588935c");
-        sampleUser.setTodos(new ArrayList<>());
     }
 
     @Test
@@ -40,7 +39,7 @@ class MongoUserDaoTest {
         assertEquals(expected, actual);
     }
     @Test
-    void createNullUser() {
+    void createNull() {
         //arrange
         when(mongoFacade.insert(null)).thenReturn(null);
 
@@ -55,16 +54,28 @@ class MongoUserDaoTest {
     void read() {
         //arrange
         String expected = sampleUser.getName();
-        when(mongoFacade.get("6491af8fd1fb19ed7588935c")).thenReturn(sampleUser.toDocument());
+        when(mongoFacade.get(sampleUser.getId())).thenReturn(sampleUser.toDocument());
 
         //act
-        String actual = sut.read("6491af8fd1fb19ed7588935c").getName();
+        String actual = sut.read(sampleUser.getId()).getName();
 
         //assert
         assertEquals(expected, actual);
     }
+
     @Test
-    void readNullId() {
+    void readWrongId() {
+        //arrange
+        when(mongoFacade.get("wrongId")).thenReturn(null);
+
+        //act
+        User actual = sut.read("wrongId");
+
+        //assert
+        assertNull(actual);
+    }
+    @Test
+    void readNull() {
         //arrange
         when(mongoFacade.get(null)).thenReturn(null);
 
@@ -74,17 +85,7 @@ class MongoUserDaoTest {
         //assert
         assertNull(actual);
     }
-    @Test
-    void readWrongId() {
-        //arrange
-        when(mongoFacade.get("invalid id")).thenReturn(null);
 
-        //act
-        User actual = sut.read("invalid id");
-
-        //assert
-        assertNull(actual);
-    }
 
     @Test
     void update() {
@@ -98,6 +99,7 @@ class MongoUserDaoTest {
         //assert
         assertEquals(expected, actual);
     }
+
     @Test
     void updateNull() {
         //arrange
@@ -109,6 +111,7 @@ class MongoUserDaoTest {
         //assert
         assertNull(actual);
     }
+
     @Test
     void updateWrongId() {
         //arrange
@@ -133,6 +136,7 @@ class MongoUserDaoTest {
         //assert
         assertEquals(expected, actual);
     }
+
     @Test
     void deleteNull() {
         //arrange
@@ -144,10 +148,10 @@ class MongoUserDaoTest {
         //assert
         assertNull(actual);
     }
+
     @Test
     void deleteWrongId() {
         //arrange
-        sampleUser.setId("invalid id");
         when(mongoFacade.delete(sampleUser.toDocument())).thenReturn(null);
 
         //act
@@ -155,5 +159,18 @@ class MongoUserDaoTest {
 
         //assert
         assertNull(actual);
+    }
+
+    @Test
+    void list() {
+        //arrange
+        String expected = sampleUser.getName();
+        when(mongoFacade.list()).thenReturn(Collections.singletonList(sampleUser.toDocument()));
+
+        //act
+        String actual = sut.list().get(0).getName();
+
+        //assert
+        assertEquals(expected, actual);
     }
 }

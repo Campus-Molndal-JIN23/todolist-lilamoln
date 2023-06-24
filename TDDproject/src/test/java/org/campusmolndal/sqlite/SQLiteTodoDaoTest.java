@@ -1,6 +1,7 @@
-package org.campusmolndal.mongodb;
+package org.campusmolndal.sqlite;
 
 import org.campusmolndal.todo.Todo;
+import org.campusmolndal.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -11,27 +12,28 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class MongoTodoDaoTest {
+class SQLiteTodoDaoTest {
     @Mock
-    private MongoFacade mongoFacade;
-    private MongoTodoDao sut;
-    private Todo sampleTodo;
+    SQLiteHandler sqLiteHandler;
+    SQLiteTodoDao sut;
+    Todo sampleTodo;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        sut = new MongoTodoDao(mongoFacade);
+        sut = new SQLiteTodoDao(sqLiteHandler);
         sampleTodo = new Todo();
         sampleTodo.setText("Test");
         sampleTodo.setDone(false);
-        sampleTodo.setId("6491b07c6bf4316a6fe5c7a6");
-        sampleTodo.setUser("6491af8fd1fb19ed7588935c");
+        sampleTodo.setId("1");
+        sampleTodo.setUser("1");
     }
 
     @Test
     void create() {
         //Arrange
         String expected = sampleTodo.getText();
-        when(mongoFacade.insert(sampleTodo.toDocument())).thenReturn(sampleTodo.toDocument());
+        when(sqLiteHandler.insert(sampleTodo)).thenReturn(sampleTodo);
 
         //Act
         String actual = sut.create(sampleTodo).getText();
@@ -39,10 +41,11 @@ class MongoTodoDaoTest {
         //Assert
         assertEquals(expected, actual);
     }
+
     @Test
     void createNull() {
         //Arrange
-        when(mongoFacade.insert(null)).thenReturn(null);
+        when(sqLiteHandler.insert((User) null)).thenReturn(null);
 
         //Act
         Todo actual = sut.create(null);
@@ -55,7 +58,7 @@ class MongoTodoDaoTest {
     void read() {
         //Arrange
         String expected = sampleTodo.getText();
-        when(mongoFacade.get(sampleTodo.getId())).thenReturn(sampleTodo.toDocument());
+        when(sqLiteHandler.getTodo(sampleTodo.getId())).thenReturn(sampleTodo);
 
         //Act
         String actual = sut.read(sampleTodo.getId()).getText();
@@ -63,10 +66,11 @@ class MongoTodoDaoTest {
         //Assert
         assertEquals(expected, actual);
     }
+
     @Test
     void readNull() {
         //Arrange
-        when(mongoFacade.get(null)).thenReturn(null);
+        when(sqLiteHandler.getTodo(null)).thenReturn(null);
 
         //Act
         Todo actual = sut.read(null);
@@ -78,10 +82,10 @@ class MongoTodoDaoTest {
     @Test
     void readWrongId() {
         //Arrange
-        when(mongoFacade.get("Not a valid ObjectId")).thenReturn(null);
+        when(sqLiteHandler.getTodo("")).thenReturn(null);
 
         //Act
-        Todo actual = sut.read("Not a valid ObjectId");
+        Todo actual = sut.read("");
 
         //Assert
         assertNull(actual);
@@ -91,7 +95,7 @@ class MongoTodoDaoTest {
     void update() {
         //Arrange
         String expected = sampleTodo.getText();
-        when(mongoFacade.update(sampleTodo.toDocument())).thenReturn(sampleTodo.toDocument());
+        when(sqLiteHandler.update(sampleTodo)).thenReturn(sampleTodo);
 
         //Act
         String actual = sut.update(sampleTodo).getText();
@@ -103,7 +107,7 @@ class MongoTodoDaoTest {
     @Test
     void updateNull() {
         //Arrange
-        when(mongoFacade.update(null)).thenReturn(null);
+        when(sqLiteHandler.update((Todo) null)).thenReturn(null);
 
         //Act
         Todo actual = sut.update(null);
@@ -115,10 +119,10 @@ class MongoTodoDaoTest {
     @Test
     void updateWrongId() {
         //Arrange
-        when(mongoFacade.update(sampleTodo.toDocument())).thenReturn(null);
+        when(sqLiteHandler.update(new Todo())).thenReturn(null);
 
         //Act
-        Todo actual = sut.update(sampleTodo);
+        Todo actual = sut.update(new Todo());
 
         //Assert
         assertNull(actual);
@@ -128,7 +132,7 @@ class MongoTodoDaoTest {
     void delete() {
         //Arrange
         String expected = sampleTodo.getText();
-        when(mongoFacade.delete(sampleTodo.toDocument())).thenReturn(sampleTodo.toDocument());
+        when(sqLiteHandler.delete(sampleTodo)).thenReturn(sampleTodo);
 
         //Act
         String actual = sut.delete(sampleTodo).getText();
@@ -136,11 +140,10 @@ class MongoTodoDaoTest {
         //Assert
         assertEquals(expected, actual);
     }
-
     @Test
     void deleteNull() {
         //Arrange
-        when(mongoFacade.delete(null)).thenReturn(null);
+        when(sqLiteHandler.delete((Todo) null)).thenReturn(null);
 
         //Act
         Todo actual = sut.delete(null);
@@ -149,67 +152,56 @@ class MongoTodoDaoTest {
         assertNull(actual);
     }
 
-    @Test void deleteWrongId() {
+    @Test
+    void deleteWrongId() {
         //Arrange
-        when(mongoFacade.delete(sampleTodo.toDocument())).thenReturn(null);
+        when(sqLiteHandler.delete(new Todo())).thenReturn(null);
 
         //Act
-        Todo actual = sut.delete(sampleTodo);
+        Todo actual = sut.delete(new Todo());
 
         //Assert
         assertNull(actual);
     }
-
     @Test
     void list() {
-        //Arrange
+        //arrange
         String expected = sampleTodo.getText();
-        when(mongoFacade.list()).thenReturn(Collections.singletonList(sampleTodo.toDocument()));
+        when(sqLiteHandler.listTodos()).thenReturn(Collections.singletonList(sampleTodo));
 
-        //Act
+        //act
         String actual = sut.list().get(0).getText();
 
-        //Assert
+        //assert
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void listNull() {
-        //Arrange
-        when(mongoFacade.list()).thenReturn(null);
-
-        //Assert
-        assertNull(sut.list());
     }
 
     @Test
     void getByUserId() {
-        //Arrange
+        //arrange
         String expected = sampleTodo.getText();
-        when(mongoFacade.findTodoByUserId(sampleTodo.getUser())).thenReturn(Collections.singletonList(sampleTodo.toDocument()));
+        when(sqLiteHandler.getTodosByUserId(sampleTodo.getUser())).thenReturn(Collections.singletonList(sampleTodo));
 
-        //Act
+        //act
         String actual = sut.getByUserId(sampleTodo.getUser()).get(0).getText();
 
-        //Assert
+        //assert
         assertEquals(expected, actual);
     }
-
     @Test
     void getByUserIdNull() {
-        //Arrange
-        when(mongoFacade.findTodoByUserId(sampleTodo.getUser())).thenReturn(null);
+        //arrange
+        when(sqLiteHandler.getTodosByUserId(null)).thenReturn(null);
 
-        //Assert
-        assertNull(sut.getByUserId(sampleTodo.getUser()));
+        //act & assert
+        assertNull(sut.getByUserId(null));
     }
-
     @Test
     void getByUserIdWrongId() {
-        //Arrange
-        when(mongoFacade.findTodoByUserId(sampleTodo.getUser())).thenReturn(null);
+        //arrange
+        when(sqLiteHandler.getTodosByUserId("")).thenReturn(null);
 
-        //Assert
-        assertNull(sut.getByUserId(sampleTodo.getUser()));
+        //assert
+        assertNull(sut.getByUserId(""));
     }
 }

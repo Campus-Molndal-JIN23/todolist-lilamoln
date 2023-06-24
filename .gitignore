@@ -23,3 +23,6 @@
 hs_err_pid*
 replay_pid*
 /mongo.config
+/todo.db
+/todos.sqlite
+/.idea/dataSources.local.xml

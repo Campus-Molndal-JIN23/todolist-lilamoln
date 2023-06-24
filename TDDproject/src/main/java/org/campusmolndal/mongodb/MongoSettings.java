@@ -13,7 +13,7 @@ public class MongoSettings {
         }
         this.cluster = getSetting("cluster");
         if (this.cluster == null) {
-            this.cluster = "ClusterKoffaTodo";
+            this.cluster = "ClusterTodo";
         }
     }
     private String getSetting(String key) {

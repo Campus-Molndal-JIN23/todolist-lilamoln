@@ -9,7 +9,10 @@ import java.util.List;
 import org.bson.Document;
 
 public class MongoUserDao implements UserDao {
-    private final MongoFacade mongoFacade = new MongoFacade("users");
+    private final MongoFacade mongoFacade;
+    public MongoUserDao(MongoFacade mongoFacade) {
+        this.mongoFacade = mongoFacade;
+    }
     @Override
     public User create(User user) {
         if(user == null) return null;

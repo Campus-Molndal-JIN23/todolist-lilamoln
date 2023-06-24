@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoTodoDao implements TodoDao {
-    private final MongoFacade mongoFacade = new MongoFacade("todos");
-    public MongoTodoDao() {
-
+    private final MongoFacade mongoFacade;
+    public MongoTodoDao(MongoFacade mongoFacade) {
+        this.mongoFacade = mongoFacade;
     }
+
     @Override
     public Todo create(Todo todo) {
+        if(todo == null) return null;
         return Todo.fromDocument(mongoFacade.insert(todo.toDocument()));
     }
 
@@ -24,6 +26,7 @@ public class MongoTodoDao implements TodoDao {
 
     @Override
     public Todo update(Todo todo) {
+        if(todo == null) return null;
         return Todo.fromDocument(mongoFacade.update(todo.toDocument()));
     }
 
@@ -37,6 +40,7 @@ public class MongoTodoDao implements TodoDao {
     @Override
     public List<Todo> list() {
         List<Document> result = mongoFacade.list();
+        if(result == null) return null;
         List<Todo> todos = new ArrayList<>();
         for (Document document : result) {
             todos.add(Todo.fromDocument(document));
@@ -47,6 +51,7 @@ public class MongoTodoDao implements TodoDao {
     @Override
     public List<Todo> getByUserId(String id) {
         List<Document> result = mongoFacade.findTodoByUserId(id);
+        if(result == null) return null;
         List<Todo> todos = new ArrayList<>();
         for (Document document : result) {
             todos.add(Todo.fromDocument(document));

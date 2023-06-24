@@ -1,18 +1,23 @@
 package org.campusmolndal;
 
+import org.campusmolndal.mongodb.MongoFacade;
 import org.campusmolndal.mongodb.MongoTodoDao;
 import org.campusmolndal.mongodb.MongoUserDao;
+import org.campusmolndal.sqlite.SQLiteHandler;
+import org.campusmolndal.sqlite.SQLiteTodoDao;
+import org.campusmolndal.sqlite.SQLiteUserDao;
 import org.campusmolndal.todo.Todo;
 import org.campusmolndal.user.User;
 
 import java.util.List;
 
 public class ConsoleController {
-    private final AppController appController = new AppController(new MongoUserDao(), new MongoTodoDao());
+    private final AppController appController;
     private User user;
     private boolean running = true;
 
     public ConsoleController() {
+        this.appController = setAppController();
         while(this.user == null) this.user = setUser();
         while (running) {
             mainMenu();
@@ -29,12 +34,8 @@ public class ConsoleController {
         System.out.println("5. Change user");
         System.out.println("6. Exit");
         switch (InputGetter.getIntInput("Enter choice", 1, 8)) {
-            case 1 -> {
-                listTodos(user.getTodos());
-            }
-            case 2 -> {
-                createTodo();
-            }
+            case 1 -> listTodos(user.getTodos());
+            case 2 -> createTodo();
             case 3 -> {
                 User newName = appController.changeName(user, InputGetter.getStringInput("Enter new name"));
                 if(newName == null) {
@@ -51,12 +52,8 @@ public class ConsoleController {
                 this.user = null;
                 while(this.user == null) this.user = setUser();
             }
-            case 5 -> {
-                this.user=setUser();
-            }
-            case 6 -> {
-                running = false;
-            }
+            case 5 -> this.user=setUser();
+            case 6 -> running = false;
         }
     }
 
@@ -106,9 +103,7 @@ public class ConsoleController {
                     System.out.println("Todo deleted");
                 }
             }
-            case 4 -> {
-                return;
-            }
+            case 4 -> {}
         }
     }
 
@@ -157,10 +152,16 @@ public class ConsoleController {
         System.out.println("2. NoSQL");
         switch (InputGetter.getIntInput("Enter choice", 1, 2)) {
             case 1 -> {
-                return new AppController(new MongoUserDao(), new MongoTodoDao());
+                return new AppController(
+                        new MongoUserDao(new MongoFacade("users")),
+                        new MongoTodoDao(new MongoFacade("todos"))
+                );
             }
             case 2 -> {
-                return null;
+                return new AppController(
+                        new SQLiteUserDao(new SQLiteHandler()),
+                        new SQLiteTodoDao(new SQLiteHandler())
+                );
             }
             default -> {
                 return null;

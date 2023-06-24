@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -147,7 +148,7 @@ class UserServiceTest {
     @Test
     void listUsers() {
         //arrange
-        when(userDao.list()).thenReturn(Arrays.asList(sampleUser));
+        when(userDao.list()).thenReturn(Collections.singletonList(sampleUser));
         int expected = 1;
 
         //act
@@ -159,7 +160,7 @@ class UserServiceTest {
     @Test
     void listUsersNoUsers() {
         //arrange
-        when(userDao.list()).thenReturn(Arrays.asList());
+        when(userDao.list()).thenReturn(List.of());
         int expected = 0;
 
         //act

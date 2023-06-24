@@ -5,7 +5,7 @@ import org.campusmolndal.interfaces.UserDao;
 import java.util.List;
 
 public class UserService {
-    private UserDao userDao;
+    private final UserDao userDao;
     public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -16,12 +16,7 @@ public class UserService {
         return userDao.create(user);
     }
     public User changeName(User user, String name) {
-        if(user == null) {
-            return null;
-        }
-        if(name == null) {
-            return user;
-        }
+        if(name == null || user == null) return null;
         user.setName(name);
         return update(user);
     }

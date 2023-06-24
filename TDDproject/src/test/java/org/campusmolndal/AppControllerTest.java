@@ -10,7 +10,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -116,7 +117,6 @@ class AppControllerTest {
     @Test
     void deleteNull() {
         //arrange
-        Todo expected = null;
         sampleTodo = null;
         when(todoDao.delete(sampleTodo)).thenReturn(null);
 
@@ -180,7 +180,7 @@ class AppControllerTest {
     @Test
     void listUsers() {
         //arrange
-        when(userDao.list()).thenReturn(Arrays.asList(sampleUser));
+        when(userDao.list()).thenReturn(Collections.singletonList(sampleUser));
         int expected = 1;
 
         //act
@@ -206,7 +206,7 @@ class AppControllerTest {
     @Test
     void listUserTodo() {
         //arrange
-        when(todoDao.getByUserId(sampleUser.getId())).thenReturn(Arrays.asList(sampleTodo));
+        when(todoDao.getByUserId(sampleUser.getId())).thenReturn(Collections.singletonList(sampleTodo));
         int expected = 1;
 
         //act
