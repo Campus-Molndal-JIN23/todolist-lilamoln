@@ -20,7 +20,7 @@ For MongoDB Atlas create a mongo.config file in root of project and insert:
 cluster=YourCluster
 connectionString=mongodb+srv://YourUrl
 ```
-You can get your connectionstring from (MongoDB)(https://www.mongodb.com/), alternatively install MongoDB locally and use localhost.
+You can get your connectionstring from [MongoDB](https://www.mongodb.com/), alternatively install MongoDB locally and use localhost.
 
 It will fallback to localhost and standard port if no connectionstring is given.
 
