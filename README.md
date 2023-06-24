@@ -15,6 +15,14 @@ See pom.xml for dependencies.
 ## Usage
 
 The app is used through the command line. The user can create a new user, create a new todo, list all todos, mark a todo as done, delete a todo.
+For MongoDB Atlas create a mongo.config file in root of project and insert:
+```
+cluster=YourCluster
+connectionString=mongodb+srv://YourUrl
+```
+You can get your connectionstring from (MongoDB)(https://www.mongodb.com/), alternatively install MongoDB locally and use localhost.
+
+It will fallback to localhost and standard port if no connectionstring is given.
 
 ## Credits
 
