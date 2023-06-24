@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MongoFacade {
     MongoCollection<Document> collection;
-    public MongoFacade(String collection) {
+    public MongoFacade(String collectionName) {
         MongoSettings mongoSettings = new MongoSettings();
         ServerApi serverApi = ServerApi.builder()
                 .version(ServerApiVersion.V1)
@@ -23,7 +23,7 @@ public class MongoFacade {
         MongoClient mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase(mongoSettings.getCluster());
         database.runCommand(new Document("ping",1));
-        this.collection = database.getCollection(collection);
+        this.collection = database.getCollection(collectionName);
     }
     public Document get(String id) {
         return collection.find(new Document("_id",new ObjectId(id))).first();
@@ -40,7 +40,8 @@ public class MongoFacade {
     }
     public Document update(Document document) {
         try {
-            collection.replaceOne(new Document("_id",document.get("_id")),document);
+            long changed = collection.replaceOne(new Document("_id",document.get("_id")),document).getModifiedCount();
+            if(changed == 0) return null;
             return document;
         } catch (MongoException e) {
             System.err.println(e.getMessage());
@@ -49,8 +50,9 @@ public class MongoFacade {
     }
     public Document delete(Document document) {
         try {
-            collection.deleteOne(new Document("_id",document.get("_id")));
-            return document;
+            if(collection.deleteOne(new Document("_id",document.get("_id"))).wasAcknowledged())
+                return document;
+            return null;
         } catch (MongoException e) {
             System.err.println(e.getMessage());
             return null;
@@ -59,18 +61,16 @@ public class MongoFacade {
     public List<Document> list() {
         List<Document> docs = new ArrayList<>();
         FindIterable<Document> documents = collection.find();
-        MongoCursor<Document> cursor = documents.iterator();
-        while(cursor.hasNext()) {
-            docs.add(cursor.next());
+        for (Document document : documents) {
+            docs.add(document);
         }
         return docs;
     }
     public List<Document> findTodoByUserId (String userId) {
         List<Document> docs = new ArrayList<>();
         FindIterable<Document> documents = collection.find(new Document("assigned_to",userId));
-        MongoCursor<Document> cursor = documents.iterator();
-        while(cursor.hasNext()) {
-            docs.add(cursor.next());
+        for (Document document : documents) {
+            docs.add(document);
         }
         return docs;
     }

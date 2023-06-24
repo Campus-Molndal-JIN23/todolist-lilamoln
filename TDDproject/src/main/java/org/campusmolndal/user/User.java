@@ -41,7 +41,7 @@ public class User {
     }
 
     public List<Todo> getTodos() {
-        if(this.todos == null) return new ArrayList<>();
+        if(this.todos == null) this.todos = new ArrayList<>();
         return this.todos;
     }
 
@@ -50,7 +50,11 @@ public class User {
     }
     public Document toDocument() {
         Document document = new Document();
-        if(this.id != null) document.append("_id", new ObjectId(this.id));
+        try {
+            document.append("_id", new ObjectId(this.id));
+        } catch (Exception e) {
+            System.err.println("Error parsing id: " + e.getMessage());
+        }
         document.append("name", this.name);
         return document;
     }

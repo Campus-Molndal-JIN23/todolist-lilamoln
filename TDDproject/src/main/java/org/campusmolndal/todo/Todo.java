@@ -62,6 +62,7 @@ public class Todo {
         return document;
     }
     public static Todo fromDocument(Document document) {
+        if(document == null) return null;
         Todo todo = new Todo();
         todo.setId(document.getObjectId("_id").toString());
         todo.setText(document.getString("text"));

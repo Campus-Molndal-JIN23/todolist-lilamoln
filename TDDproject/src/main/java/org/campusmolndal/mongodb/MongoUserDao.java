@@ -9,26 +9,47 @@ import java.util.List;
 import org.bson.Document;
 
 public class MongoUserDao implements UserDao {
-    private final MongoFacade mongoFacade = new MongoFacade("users");
+    private final MongoFacade mongoFacade;
+    public MongoUserDao(MongoFacade mongoFacade) {
+        this.mongoFacade = mongoFacade;
+    }
     @Override
     public User create(User user) {
+        if(user == null) return null;
         return User.fromDocument(mongoFacade.insert(user.toDocument()));
     }
 
     @Override
     public User read(String id) {
-        return User.fromDocument(mongoFacade.get(id));
+        if(id == null) return null;
+        try {
+            return User.fromDocument(mongoFacade.get(id));
+        } catch (Exception e) {
+            System.err.println("Error in MongoUserDao.read: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public User update(User user) {
-        return User.fromDocument(mongoFacade.update(user.toDocument()));
-
+        if(user == null) return null;
+        if(user.getId() == null) return null;
+        try {
+            return User.fromDocument(mongoFacade.update(user.toDocument()));
+        } catch (Exception e) {
+            System.err.println("Error in MongoUserDao.update: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public User delete(User user) {
-        return User.fromDocument(mongoFacade.delete(user.toDocument()));
+        try {
+            return User.fromDocument(mongoFacade.delete(user.toDocument()));
+        } catch (Exception e) {
+            System.err.println("Error in MongoUserDao.delete: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
