@@ -40,6 +40,7 @@ Anledning till att jag valde att returnera t är att jag vet att det är ganska 
 | TodoDao\<Todo\>        |
 |------------------------|
 | getByUserId(String id) |
+
 Anledningen till att jag valde String var att jag ville att interfacet skulle kunna användas oavsett vilken databaslösning man har.
 
 | UserDao\<User\> |
