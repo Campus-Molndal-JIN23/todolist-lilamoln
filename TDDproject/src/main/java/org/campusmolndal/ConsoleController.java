@@ -36,25 +36,29 @@ public class ConsoleController {
         switch (InputGetter.getIntInput("Enter choice", 1, 8)) {
             case 1 -> listTodos(user.getTodos());
             case 2 -> createTodo();
-            case 3 -> {
-                User newName = appController.changeName(user, InputGetter.getStringInput("Enter new name"));
-                if(newName == null) {
-                    System.err.println("Error changing name");
-                    break;
-                }
-                this.user = appController.getUser(newName.getId());
-            }
-            case 4 -> {
-                if(appController.delete(user) == null) {
-                    System.err.println("Error deleting user");
-                    break;
-                }
-                this.user = null;
-                while(this.user == null) this.user = setUser();
-            }
+            case 3 -> changeName();
+            case 4 -> deleteUser();
             case 5 -> this.user=setUser();
             case 6 -> running = false;
         }
+    }
+
+    private void deleteUser() {
+        if(appController.delete(user) == null) {
+            System.err.println("Error deleting user");
+            return;
+        }
+        this.user = null;
+        while(this.user == null) this.user = setUser();
+    }
+
+    private void changeName() {
+        User newName = appController.changeName(user, InputGetter.getStringInput("Enter new name"));
+        if(newName == null) {
+            System.err.println("Error changing name");
+            return;
+        }
+        this.user = appController.getUser(newName.getId());
     }
 
     private void createTodo() {
@@ -94,16 +98,18 @@ public class ConsoleController {
                 todo.setDone(!todo.isDone());
                 appController.update(todo);
             }
-            case 3 -> {
-                if(appController.delete(todo) == null) {
-                    System.err.println("Todo not deleted, try again");
-                }
-                else {
-                    user.getTodos().remove(todo);
-                    System.out.println("Todo deleted");
-                }
-            }
+            case 3 -> deleteTodo(todo);
             case 4 -> {}
+        }
+    }
+
+    private void deleteTodo(Todo todo) {
+        if(appController.delete(todo) == null) {
+            System.err.println("Todo not deleted, try again");
+        }
+        else {
+            user.getTodos().remove(todo);
+            System.out.println("Todo deleted");
         }
     }
 
@@ -114,9 +120,11 @@ public class ConsoleController {
             case 1 -> {
                 return selectUser();
             }
+
             case 2 -> {
                 return createUser();
             }
+
             default -> {
                 return null;
             }
