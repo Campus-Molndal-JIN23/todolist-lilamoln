@@ -49,7 +49,7 @@ Anledningen till att jag valde String var att jag ville att interfacet skulle ku
 UserDao behövde inga egna metoder utan bara säga vilken typ av objekt den skulle hantera.
 
 ### Jira/Trello/Github Project och projekthantering enligt Scrum/Kanban
-(Github Project)[https://github.com/orgs/Campus-Molndal-JIN23/projects/51/views/1?layout=board]
+[Github Project](https://github.com/orgs/Campus-Molndal-JIN23/projects/51/views/1?layout=board)
 ## Arbetet och dess genomförande
 
 ### Vad som varit svårt
