@@ -22,9 +22,10 @@ connectionString=mongodb+srv://YourUrl
 ```
 You can get your connectionstring from [MongoDB](https://www.mongodb.com/), alternatively install MongoDB locally and use localhost.
 
-It will fallback to localhost and standard port if no connectionstring is given.
+It will fall back to localhost and standard port if no connectionstring is given.
 
 ## Credits
+Big thanks to function tests by Tested by [Samer Ismael](https://github.com/Samer-Ismael) and [Johan Romero](https://github.com/JohRome.) (nice bug find!).
 
 Third party resources that helped me complete this project:
 * [junit jupiter 5](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter/)
@@ -37,6 +38,8 @@ Online resources:
 * [mongodb documentation](https://www.mongodb.com/docs/) 
 * [ChatGPT](https://chat.openai.com/) for troubleshooting and inspiration
 * [Co-Pilot](https://copilot.github.com/) primarily for test-cases
+
+
 ## License
 
 MIT License
