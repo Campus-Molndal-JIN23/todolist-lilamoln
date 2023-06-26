@@ -8,12 +8,12 @@ public class MongoSettings {
     private String cluster;
     public MongoSettings() {
         this.connectionString = getSetting("connectionString");
-        if (this.connectionString == null) {
+        if (this.connectionString == null || this.connectionString.isEmpty()) {
             this.connectionString = "mongodb://localhost:27017";
         }
         this.cluster = getSetting("cluster");
-        if (this.cluster == null) {
-            this.cluster = "ClusterTodo";
+        if (this.cluster == null || this.cluster.isEmpty()) {
+            this.cluster = "Todo";
         }
     }
     private String getSetting(String key) {
