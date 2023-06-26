@@ -38,7 +38,7 @@ public class ConsoleController {
             case 2 -> createTodo();
             case 3 -> changeName();
             case 4 -> deleteUser();
-            case 5 -> this.user=setUser();
+            case 5 -> changeUser();
             case 6 -> running = false;
         }
     }
@@ -59,6 +59,13 @@ public class ConsoleController {
             return;
         }
         this.user = appController.getUser(newName.getId());
+    }
+
+    private void changeUser() {
+        User newUser = setUser();
+        if (newUser != null) {
+            this.user = newUser;
+        }
     }
 
     private void createTodo() {
