@@ -13,18 +13,39 @@ public class MongoFacade {
     MongoCollection<Document> collection;
     public MongoFacade(String collectionName) {
         MongoSettings mongoSettings = new MongoSettings();
+        MongoDatabase database = getMongoDatabase(mongoSettings.getCluster(), mongoSettings.getConnectionString());
+        if(invalidDb(database)) {
+            database = getMongoDatabase("TodoKristofferL", "mongodb://localhost:27017");
+            if(invalidDb(database)) {
+                System.err.println("Could not connect to database");
+                System.exit(1);
+            }
+        }
+        this.collection = database.getCollection(collectionName);
+    }
+
+    private static MongoDatabase getMongoDatabase(String cluster, String connectionString) {
         ServerApi serverApi = ServerApi.builder()
                 .version(ServerApiVersion.V1)
                 .build();
         MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(mongoSettings.getConnectionString()))
+                .applyConnectionString(new ConnectionString(connectionString))
                 .serverApi(serverApi)
                 .build();
         MongoClient mongoClient = MongoClients.create(settings);
-        MongoDatabase database = mongoClient.getDatabase(mongoSettings.getCluster());
-        database.runCommand(new Document("ping",1));
-        this.collection = database.getCollection(collectionName);
+        return mongoClient.getDatabase(cluster);
     }
+
+    private boolean invalidDb(MongoDatabase database) {
+        try {
+            database.runCommand(new Document("ping",1));
+            return false;
+        } catch (MongoException e) {
+            System.err.println(e.getMessage());
+            return true;
+        }
+    }
+
     public Document get(String id) {
         return collection.find(new Document("_id",new ObjectId(id))).first();
     }

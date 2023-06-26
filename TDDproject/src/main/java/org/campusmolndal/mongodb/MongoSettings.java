@@ -1,6 +1,8 @@
 package org.campusmolndal.mongodb;
 
+import java.io.File;
 import java.io.FileReader;
+import java.nio.file.FileSystems;
 import java.util.Properties;
 
 public class MongoSettings {
@@ -13,7 +15,7 @@ public class MongoSettings {
         }
         this.cluster = getSetting("cluster");
         if (this.cluster == null || this.cluster.isEmpty()) {
-            this.cluster = "Todo";
+            this.cluster = "TodoKristofferL";
         }
     }
     private String getSetting(String key) {

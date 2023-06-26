@@ -51,7 +51,7 @@ public class User {
     public Document toDocument() {
         Document document = new Document();
         try {
-            document.append("_id", new ObjectId(this.id));
+            if(this.id != null) document.append("_id", new ObjectId(this.id));
         } catch (Exception e) {
             System.err.println("Error parsing id: " + e.getMessage());
         }
