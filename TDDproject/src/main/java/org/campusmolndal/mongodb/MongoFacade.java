@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MongoFacade {
@@ -51,10 +52,10 @@ public class MongoFacade {
     }
     public Document insert(Document document) {
         try {
-            ObjectId objectId = collection.insertOne(document).getInsertedId().asObjectId().getValue();
+            ObjectId objectId = Objects.requireNonNull(collection.insertOne(document).getInsertedId()).asObjectId().getValue();
             document.put("_id",objectId);
             return document;
-        } catch (MongoException e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             return null;
         }
